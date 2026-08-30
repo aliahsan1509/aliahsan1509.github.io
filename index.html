@@ -1,0 +1,960 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Ali Ahsan — CSE Portfolio</title>
+
+  <!-- Google Font -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;600;700;800&family=Poppins:wght@300;400;500;600;700&display=swap"
+    rel="stylesheet"
+  />
+
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      background: #03040a;
+      color: #fff;
+      font-family: "Poppins", sans-serif;
+      overflow-x: hidden;
+    }
+
+    /* =========================
+       3D CANVAS
+    ========================= */
+
+    #webgl {
+      position: fixed;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      z-index: -2;
+      display: block;
+    }
+
+    .noise {
+      position: fixed;
+      inset: 0;
+      z-index: -1;
+      pointer-events: none;
+      opacity: 0.045;
+      background-image:
+        url("data:image/svg+xml,%3Csvg viewBox='0 0 180 180' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='.7'/%3E%3C/svg%3E");
+    }
+
+    /* =========================
+       NAVBAR
+    ========================= */
+
+    header {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      z-index: 100;
+      padding: 22px 6%;
+      transition: 0.4s ease;
+    }
+
+    header.scrolled {
+      padding: 14px 6%;
+      background: rgba(3, 4, 10, 0.78);
+      backdrop-filter: blur(18px);
+      border-bottom: 1px solid rgba(255,255,255,0.08);
+    }
+
+    nav {
+      max-width: 1250px;
+      margin: auto;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .logo {
+      font-family: "Orbitron", sans-serif;
+      font-weight: 700;
+      letter-spacing: 2px;
+      font-size: 18px;
+    }
+
+    .logo span {
+      opacity: 0.45;
+    }
+
+    .nav-links {
+      display: flex;
+      gap: 32px;
+      list-style: none;
+    }
+
+    .nav-links a {
+      color: #fff;
+      text-decoration: none;
+      font-size: 13px;
+      opacity: 0.72;
+      transition: 0.3s;
+    }
+
+    .nav-links a:hover {
+      opacity: 1;
+    }
+
+    /* =========================
+       HERO
+    ========================= */
+
+    .hero {
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      padding: 120px 8% 80px;
+      position: relative;
+    }
+
+    .hero-content {
+      max-width: 1250px;
+      width: 100%;
+      margin: auto;
+      position: relative;
+      z-index: 2;
+    }
+
+    .eyebrow {
+      font-family: "Orbitron", sans-serif;
+      font-size: 12px;
+      letter-spacing: 4px;
+      opacity: 0.6;
+      margin-bottom: 20px;
+    }
+
+    .hero h1 {
+      font-family: "Orbitron", sans-serif;
+      font-size: clamp(48px, 8vw, 110px);
+      line-height: 0.95;
+      letter-spacing: -3px;
+      max-width: 850px;
+    }
+
+    .hero h1 .outline {
+      color: transparent;
+      -webkit-text-stroke: 1px rgba(255,255,255,0.55);
+    }
+
+    .hero-description {
+      max-width: 570px;
+      margin-top: 30px;
+      font-size: 16px;
+      line-height: 1.8;
+      opacity: 0.65;
+    }
+
+    .hero-buttons {
+      margin-top: 35px;
+      display: flex;
+      gap: 15px;
+      flex-wrap: wrap;
+    }
+
+    .btn {
+      text-decoration: none;
+      color: #fff;
+      padding: 14px 25px;
+      border: 1px solid rgba(255,255,255,0.25);
+      border-radius: 50px;
+      font-size: 13px;
+      transition: 0.35s ease;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      backdrop-filter: blur(8px);
+    }
+
+    .btn:hover {
+      transform: translateY(-4px);
+      background: #fff;
+      color: #000;
+      border-color: #fff;
+    }
+
+    .scroll-indicator {
+      position: absolute;
+      bottom: 30px;
+      left: 50%;
+      transform: translateX(-50%);
+      font-size: 10px;
+      letter-spacing: 3px;
+      opacity: 0.4;
+      text-align: center;
+    }
+
+    .scroll-line {
+      width: 1px;
+      height: 45px;
+      background: #fff;
+      margin: 10px auto 0;
+      opacity: 0.35;
+      animation: scrollLine 1.8s infinite;
+    }
+
+    @keyframes scrollLine {
+      0%, 100% {
+        transform: scaleY(0.3);
+        transform-origin: top;
+      }
+      50% {
+        transform: scaleY(1);
+        transform-origin: top;
+      }
+    }
+
+    /* =========================
+       GENERAL SECTION
+    ========================= */
+
+    section {
+      padding: 120px 8%;
+      position: relative;
+    }
+
+    .section-inner {
+      max-width: 1250px;
+      margin: auto;
+    }
+
+    .section-label {
+      font-family: "Orbitron", sans-serif;
+      font-size: 11px;
+      letter-spacing: 4px;
+      opacity: 0.45;
+      margin-bottom: 12px;
+    }
+
+    .section-title {
+      font-family: "Orbitron", sans-serif;
+      font-size: clamp(32px, 5vw, 65px);
+      margin-bottom: 55px;
+    }
+
+    /* =========================
+       ABOUT
+    ========================= */
+
+    .about-grid {
+      display: grid;
+      grid-template-columns: 1.1fr 0.9fr;
+      gap: 35px;
+    }
+
+    .glass {
+      background: rgba(255,255,255,0.035);
+      border: 1px solid rgba(255,255,255,0.1);
+      backdrop-filter: blur(20px);
+      border-radius: 25px;
+    }
+
+    .about-text {
+      padding: 40px;
+    }
+
+    .about-text p {
+      line-height: 1.9;
+      opacity: 0.68;
+      margin-bottom: 20px;
+    }
+
+    .about-card {
+      padding: 35px;
+      min-height: 300px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      transition: transform 0.15s ease;
+      transform-style: preserve-3d;
+    }
+
+    .about-card h3 {
+      font-family: "Orbitron", sans-serif;
+      font-size: 28px;
+    }
+
+    .about-card .code {
+      font-family: monospace;
+      font-size: 14px;
+      opacity: 0.55;
+      line-height: 1.8;
+    }
+
+    /* =========================
+       SKILLS
+    ========================= */
+
+    .skills {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 18px;
+    }
+
+    .skill {
+      padding: 30px;
+      min-height: 150px;
+      transition: 0.3s;
+      transform-style: preserve-3d;
+    }
+
+    .skill:hover {
+      transform: translateY(-8px);
+      border-color: rgba(255,255,255,0.3);
+    }
+
+    .skill-number {
+      font-family: "Orbitron", sans-serif;
+      font-size: 11px;
+      opacity: 0.35;
+    }
+
+    .skill h3 {
+      margin-top: 30px;
+      font-size: 20px;
+      font-weight: 500;
+    }
+
+    /* =========================
+       PROJECTS
+    ========================= */
+
+    .projects {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 25px;
+    }
+
+    .project {
+      min-height: 390px;
+      padding: 35px;
+      position: relative;
+      overflow: hidden;
+      transition: transform 0.15s ease;
+      transform-style: preserve-3d;
+    }
+
+    .project::before {
+      content: "";
+      position: absolute;
+      width: 180px;
+      height: 180px;
+      border: 1px solid rgba(255,255,255,0.15);
+      border-radius: 50%;
+      right: -50px;
+      top: -50px;
+      transition: 0.5s;
+    }
+
+    .project:hover::before {
+      transform: scale(1.5);
+    }
+
+    .project-number {
+      font-family: "Orbitron", sans-serif;
+      opacity: 0.35;
+      font-size: 12px;
+    }
+
+    .project h3 {
+      font-family: "Orbitron", sans-serif;
+      font-size: 28px;
+      margin-top: 70px;
+    }
+
+    .project p {
+      opacity: 0.6;
+      line-height: 1.7;
+      margin-top: 15px;
+      max-width: 480px;
+    }
+
+    .project-tags {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+      margin-top: 25px;
+    }
+
+    .tag {
+      border: 1px solid rgba(255,255,255,0.15);
+      padding: 7px 12px;
+      border-radius: 30px;
+      font-size: 10px;
+      opacity: 0.7;
+    }
+
+    .project-link {
+      position: absolute;
+      bottom: 30px;
+      left: 35px;
+      color: #fff;
+      text-decoration: none;
+      font-size: 12px;
+    }
+
+    /* =========================
+       TIMELINE
+    ========================= */
+
+    .timeline {
+      position: relative;
+      max-width: 900px;
+    }
+
+    .timeline::before {
+      content: "";
+      position: absolute;
+      left: 9px;
+      top: 0;
+      bottom: 0;
+      width: 1px;
+      background: rgba(255,255,255,0.15);
+    }
+
+    .timeline-item {
+      position: relative;
+      padding-left: 50px;
+      margin-bottom: 55px;
+    }
+
+    .timeline-dot {
+      position: absolute;
+      left: 4px;
+      top: 5px;
+      width: 11px;
+      height: 11px;
+      border: 1px solid #fff;
+      border-radius: 50%;
+      background: #03040a;
+    }
+
+    .timeline-year {
+      font-family: "Orbitron", sans-serif;
+      font-size: 11px;
+      opacity: 0.4;
+    }
+
+    .timeline-item h3 {
+      margin: 10px 0;
+      font-size: 23px;
+    }
+
+    .timeline-item p {
+      opacity: 0.55;
+      line-height: 1.7;
+    }
+
+    /* =========================
+       CONTACT
+    ========================= */
+
+    .contact-box {
+      text-align: center;
+      padding: 80px 30px;
+    }
+
+    .contact-box h2 {
+      font-family: "Orbitron", sans-serif;
+      font-size: clamp(32px, 6vw, 75px);
+    }
+
+    .contact-box p {
+      opacity: 0.55;
+      margin: 20px auto 35px;
+      max-width: 600px;
+    }
+
+    .socials {
+      display: flex;
+      justify-content: center;
+      flex-wrap: wrap;
+      gap: 15px;
+    }
+
+    .socials a {
+      color: #fff;
+      text-decoration: none;
+      border-bottom: 1px solid rgba(255,255,255,0.3);
+      padding-bottom: 5px;
+      font-size: 13px;
+    }
+
+    /* =========================
+       FOOTER
+    ========================= */
+
+    footer {
+      padding: 30px 8%;
+      text-align: center;
+      opacity: 0.35;
+      font-size: 11px;
+      letter-spacing: 1px;
+    }
+
+    /* =========================
+       REVEAL
+    ========================= */
+
+    .reveal {
+      opacity: 0;
+      transform: translateY(60px);
+      transition: opacity 0.9s ease, transform 0.9s ease;
+    }
+
+    .reveal.active {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    /* =========================
+       RESPONSIVE
+    ========================= */
+
+    @media (max-width: 850px) {
+      .nav-links {
+        display: none;
+      }
+
+      .about-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .skills {
+        grid-template-columns: repeat(2, 1fr);
+      }
+
+      .projects {
+        grid-template-columns: 1fr;
+      }
+
+      .hero {
+        padding-left: 7%;
+        padding-right: 7%;
+      }
+    }
+
+    @media (max-width: 520px) {
+      section {
+        padding: 90px 6%;
+      }
+
+      .skills {
+        grid-template-columns: 1fr;
+      }
+
+      .hero h1 {
+        letter-spacing: -2px;
+      }
+
+      .about-text,
+      .about-card,
+      .project {
+        padding: 25px;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+  <!-- Three.js Canvas -->
+  <canvas id="webgl"></canvas>
+
+  <div class="noise"></div>
+
+  <!-- =========================
+       NAVIGATION
+  ========================= -->
+
+  <header id="header">
+    <nav>
+      <div class="logo">
+        ALI<span>.</span>AHsan
+      </div>
+
+      <ul class="nav-links">
+        <li><a href="#about">ABOUT</a></li>
+        <li><a href="#skills">SKILLS</a></li>
+        <li><a href="#projects">PROJECTS</a></li>
+        <li><a href="#contact">CONTACT</a></li>
+      </ul>
+    </nav>
+  </header>
+
+  <!-- =========================
+       HERO
+  ========================= -->
+
+  <main>
+
+    <section class="hero">
+
+      <div class="hero-content">
+
+        <div class="eyebrow reveal">
+          COMPUTER SCIENCE & ENGINEERING
+        </div>
+
+        <h1 class="reveal">
+          ALI<br>
+          <span class="outline">AHSAN</span>
+        </h1>
+
+        <p class="hero-description reveal">
+          Software Developer • Web Developer • Problem Solver
+          <br>
+          I build digital experiences where technology,
+          creativity and intelligent systems meet.
+        </p>
+
+        <div class="hero-buttons reveal">
+          <a href="#projects" class="btn">
+            EXPLORE PROJECTS →
+          </a>
+
+          <a href="#contact" class="btn">
+            CONTACT ME
+          </a>
+        </div>
+
+      </div>
+
+      <div class="scroll-indicator">
+        SCROLL
+        <div class="scroll-line"></div>
+      </div>
+
+    </section>
+
+    <!-- =========================
+         ABOUT
+    ========================= -->
+
+    <section id="about">
+
+      <div class="section-inner">
+
+        <div class="section-label reveal">
+          01 / ABOUT
+        </div>
+
+        <h2 class="section-title reveal">
+          WHO I AM
+        </h2>
+
+        <div class="about-grid">
+
+          <div class="glass about-text reveal">
+
+            <p>
+              I'm a Computer Science enthusiast focused on building
+              modern software, web applications and creative digital
+              experiences.
+            </p>
+
+            <p>
+              I enjoy solving complex problems, learning new
+              technologies and turning ideas into useful products.
+            </p>
+
+            <p>
+              My interests include Web Development, Software
+              Development, UI/UX, Artificial Intelligence and
+              Automation.
+            </p>
+
+          </div>
+
+          <div class="glass about-card tilt reveal">
+
+            <div>
+              <div class="section-label">CURRENT FOCUS</div>
+
+              <h3>
+                BUILD.<br>
+                LEARN.<br>
+                CREATE.
+              </h3>
+            </div>
+
+            <div class="code">
+              const developer = {<br>
+              &nbsp;&nbsp;mindset: "creative",<br>
+              &nbsp;&nbsp;passion: "technology",<br>
+              &nbsp;&nbsp;goal: "build impact"<br>
+              };
+            </div>
+
+          </div>
+
+        </div>
+
+      </div>
+
+    </section>
+
+    <!-- =========================
+         SKILLS
+    ========================= -->
+
+    <section id="skills">
+
+      <div class="section-inner">
+
+        <div class="section-label reveal">
+          02 / EXPERTISE
+        </div>
+
+        <h2 class="section-title reveal">
+          SKILLS
+        </h2>
+
+        <div class="skills">
+
+          <div class="glass skill tilt reveal">
+            <span class="skill-number">01</span>
+            <h3>Web Development</h3>
+          </div>
+
+          <div class="glass skill tilt reveal">
+            <span class="skill-number">02</span>
+            <h3>Software Development</h3>
+          </div>
+
+          <div class="glass skill tilt reveal">
+            <span class="skill-number">03</span>
+            <h3>Java / C / C++</h3>
+          </div>
+
+          <div class="glass skill tilt reveal">
+            <span class="skill-number">04</span>
+            <h3>Python</h3>
+          </div>
+
+          <div class="glass skill tilt reveal">
+            <span class="skill-number">05</span>
+            <h3>UI / UX Design</h3>
+          </div>
+
+          <div class="glass skill tilt reveal">
+            <span class="skill-number">06</span>
+            <h3>AI & Automation</h3>
+          </div>
+
+          <div class="glass skill tilt reveal">
+            <span class="skill-number">07</span>
+            <h3>Problem Solving</h3>
+          </div>
+
+          <div class="glass skill tilt reveal">
+            <span class="skill-number">08</span>
+            <h3>Motion Design</h3>
+          </div>
+
+          <div class="glass skill tilt reveal">
+            <span class="skill-number">09</span>
+            <h3>Digital Marketing</h3>
+          </div>
+
+        </div>
+
+      </div>
+
+    </section>
+
+    <!-- =========================
+         PROJECTS
+    ========================= -->
+
+    <section id="projects">
+
+      <div class="section-inner">
+
+        <div class="section-label reveal">
+          03 / SELECTED WORK
+        </div>
+
+        <h2 class="section-title reveal">
+          PROJECTS
+        </h2>
+
+        <div class="projects">
+
+          <article class="glass project tilt reveal">
+
+            <span class="project-number">PROJECT 01</span>
+
+            <h3>
+              Web Application
+            </h3>
+
+            <p>
+              A modern responsive web application designed with
+              clean UI, smooth interactions and scalable architecture.
+            </p>
+
+            <div class="project-tags">
+              <span class="tag">HTML</span>
+              <span class="tag">CSS</span>
+              <span class="tag">JavaScript</span>
+            </div>
+
+            <a href="#" class="project-link">
+              VIEW PROJECT →
+            </a>
+
+          </article>
+
+
+          <article class="glass project tilt reveal">
+
+            <span class="project-number">PROJECT 02</span>
+
+            <h3>
+              Software System
+            </h3>
+
+            <p>
+              A software project focused on solving real-world
+              problems through efficient programming and automation.
+            </p>
+
+            <div class="project-tags">
+              <span class="tag">Java</span>
+              <span class="tag">C++</span>
+              <span class="tag">Python</span>
+            </div>
+
+            <a href="#" class="project-link">
+              VIEW PROJECT →
+            </a>
+
+          </article>
+
+
+          <article class="glass project tilt reveal">
+
+            <span class="project-number">PROJECT 03</span>
+
+            <h3>
+              AI & Automation
+            </h3>
+
+            <p>
+              An intelligent automation concept designed to improve
+              productivity using modern AI technologies.
+            </p>
+
+            <div class="project-tags">
+              <span class="tag">Python</span>
+              <span class="tag">AI</span>
+              <span class="tag">Automation</span>
+            </div>
+
+            <a href="#" class="project-link">
+              VIEW PROJECT →
+            </a>
+
+          </article>
+
+
+          <article class="glass project tilt reveal">
+
+            <span class="project-number">PROJECT 04</span>
+
+            <h3>
+              UI / UX Concept
+            </h3>
+
+            <p>
+              A user-centered interface concept combining visual
+              design, interaction and motion.
+            </p>
+
+            <div class="project-tags">
+              <span class="tag">UI/UX</span>
+              <span class="tag">Motion</span>
+              <span class="tag">Design</span>
+            </div>
+
+            <a href="#" class="project-link">
+              VIEW PROJECT →
+            </a>
+
+          </article>
+
+        </div>
+
+      </div>
+
+    </section>
+
+    <!-- =========================
+         EDUCATION
+    ========================= -->
+
+    <section id="education">
+
+      <div class="section-inner">
+
+        <div class="section-label reveal">
+          04 / JOURNEY
+        </div>
+
+        <h2 class="section-title reveal">
+          EDUCATION
+        </h2>
+
+        <div class="timeline">
+
+          <div class="timeline-item reveal">
+
+            <div class="timeline-dot"></div>
+
+            <div class="timeline-year">
+              CSE
+            </div>
+
+            <h3>
+              Computer Science & Engineering
+            </h3>
+
+            <p>
+              Building a strong foundation in programming,
+              algorithms, software engineering and modern
+              computing technologies.
+            </p>
+
+          </div>
+
+          <div class="timeline-item reveal">
+
+            <div class="timeline-dot"></div>
+
+            <div class="timeline-year">
+              CONTINUOUS
+            </div>
+
+            <h3>
+              Learning & Development
+            </h3>
+
+            <p>
+              Continuously explori
