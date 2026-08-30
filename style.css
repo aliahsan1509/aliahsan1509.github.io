@@ -1,0 +1,645 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  background: #03040a;
+  color: white;
+  font-family: "Poppins", sans-serif;
+  overflow-x: hidden;
+}
+
+#webgl {
+  position: fixed;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  z-index: -2;
+}
+
+.noise {
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  opacity: .04;
+
+  background-image:
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='3'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+}
+
+
+/* =========================
+NAVBAR
+========================= */
+
+header {
+  position: fixed;
+  top: 0;
+  width: 100%;
+  z-index: 100;
+  padding: 22px 6%;
+  transition: .4s;
+}
+
+header.scrolled {
+  padding: 14px 6%;
+  background: rgba(3,4,10,.8);
+  backdrop-filter: blur(20px);
+  border-bottom: 1px solid rgba(255,255,255,.08);
+}
+
+nav {
+  max-width: 1250px;
+  margin: auto;
+
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.logo {
+  color: white;
+  text-decoration: none;
+
+  font-family: "Orbitron";
+  font-weight: 700;
+  letter-spacing: 2px;
+}
+
+.logo span {
+  opacity: .4;
+}
+
+.nav-links {
+  display: flex;
+  gap: 30px;
+  list-style: none;
+}
+
+.nav-links a {
+  color: white;
+  text-decoration: none;
+  font-size: 12px;
+  opacity: .65;
+  transition: .3s;
+}
+
+.nav-links a:hover {
+  opacity: 1;
+}
+
+.menu-btn {
+  display: none;
+  background: none;
+  border: none;
+  color: white;
+  font-size: 25px;
+}
+
+
+/* =========================
+HERO
+========================= */
+
+.hero {
+  min-height: 100vh;
+
+  display: flex;
+  align-items: center;
+
+  padding: 120px 8% 80px;
+
+  position: relative;
+}
+
+.hero-content {
+  max-width: 1250px;
+  width: 100%;
+  margin: auto;
+  z-index: 2;
+}
+
+.eyebrow {
+  font-family: "Orbitron";
+  font-size: 11px;
+  letter-spacing: 4px;
+  opacity: .55;
+  margin-bottom: 20px;
+}
+
+.hero h1 {
+  font-family: "Orbitron";
+  font-size: clamp(50px, 9vw, 115px);
+  line-height: .9;
+  letter-spacing: -4px;
+}
+
+.hero h1 span {
+  color: transparent;
+  -webkit-text-stroke: 1px rgba(255,255,255,.6);
+}
+
+.hero-description {
+  max-width: 580px;
+  margin-top: 30px;
+
+  font-size: 15px;
+  line-height: 1.9;
+  opacity: .6;
+}
+
+.hero-buttons {
+  display: flex;
+  gap: 15px;
+  margin-top: 35px;
+  flex-wrap: wrap;
+}
+
+.btn {
+  color: white;
+  text-decoration: none;
+
+  border: 1px solid rgba(255,255,255,.25);
+  padding: 14px 24px;
+
+  border-radius: 50px;
+
+  font-size: 12px;
+
+  backdrop-filter: blur(10px);
+
+  transition: .35s;
+}
+
+.btn:hover {
+  background: white;
+  color: black;
+
+  transform: translateY(-4px);
+}
+
+.scroll-indicator {
+  position: absolute;
+  bottom: 25px;
+  left: 50%;
+
+  transform: translateX(-50%);
+
+  font-size: 9px;
+  letter-spacing: 3px;
+
+  opacity: .35;
+  text-align: center;
+}
+
+.scroll-line {
+  width: 1px;
+  height: 45px;
+
+  background: white;
+
+  margin: 10px auto;
+
+  animation: scrollLine 1.8s infinite;
+}
+
+@keyframes scrollLine {
+
+  0%,100% {
+    transform: scaleY(.3);
+  }
+
+  50% {
+    transform: scaleY(1);
+  }
+
+}
+
+
+/* =========================
+SECTIONS
+========================= */
+
+section {
+  padding: 120px 8%;
+  position: relative;
+}
+
+.section-inner {
+  max-width: 1250px;
+  margin: auto;
+}
+
+.section-label {
+  font-family: "Orbitron";
+  font-size: 10px;
+  letter-spacing: 4px;
+  opacity: .4;
+  margin-bottom: 12px;
+}
+
+.section-title {
+  font-family: "Orbitron";
+  font-size: clamp(35px, 6vw, 70px);
+  margin-bottom: 55px;
+}
+
+
+/* =========================
+GLASS
+========================= */
+
+.glass {
+  background: rgba(255,255,255,.035);
+
+  border: 1px solid rgba(255,255,255,.1);
+
+  backdrop-filter: blur(20px);
+
+  border-radius: 25px;
+}
+
+
+/* =========================
+ABOUT
+========================= */
+
+.about-grid {
+  display: grid;
+
+  grid-template-columns:
+    1.1fr .9fr;
+
+  gap: 30px;
+}
+
+.about-text {
+  padding: 40px;
+}
+
+.about-text p {
+  line-height: 1.9;
+  opacity: .65;
+  margin-bottom: 20px;
+}
+
+.about-card {
+  padding: 35px;
+
+  min-height: 320px;
+
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+
+  transform-style: preserve-3d;
+}
+
+.about-card h3 {
+  font-family: "Orbitron";
+  font-size: 28px;
+}
+
+.code {
+  font-family: monospace;
+  font-size: 13px;
+  opacity: .5;
+  line-height: 1.8;
+}
+
+
+/* =========================
+SKILLS
+========================= */
+
+.skills {
+  display: grid;
+
+  grid-template-columns:
+    repeat(3,1fr);
+
+  gap: 18px;
+}
+
+.skill {
+  padding: 30px;
+
+  min-height: 150px;
+
+  transition: .3s;
+
+  transform-style: preserve-3d;
+}
+
+.skill > span {
+  font-family: "Orbitron";
+  font-size: 10px;
+  opacity: .35;
+}
+
+.skill h3 {
+  margin-top: 30px;
+
+  font-size: 19px;
+  font-weight: 500;
+}
+
+.skill:hover {
+  border-color: rgba(255,255,255,.3);
+}
+
+
+/* =========================
+PROJECTS
+========================= */
+
+.projects {
+  display: grid;
+
+  grid-template-columns:
+    repeat(2,1fr);
+
+  gap: 25px;
+}
+
+.project {
+  min-height: 390px;
+
+  padding: 35px;
+
+  position: relative;
+
+  overflow: hidden;
+
+  transform-style: preserve-3d;
+}
+
+.project > span {
+  font-family: "Orbitron";
+  font-size: 10px;
+  opacity: .35;
+}
+
+.project h3 {
+  font-family: "Orbitron";
+
+  font-size: 27px;
+
+  margin-top: 65px;
+}
+
+.project p {
+  opacity: .55;
+
+  line-height: 1.7;
+
+  margin-top: 15px;
+}
+
+.project-tags {
+  display: flex;
+
+  gap: 8px;
+
+  margin-top: 25px;
+}
+
+.project-tags small {
+  border: 1px solid rgba(255,255,255,.15);
+
+  padding: 7px 12px;
+
+  border-radius: 30px;
+
+  font-size: 9px;
+
+  opacity: .7;
+}
+
+.project-link {
+  position: absolute;
+
+  bottom: 30px;
+  left: 35px;
+
+  color: white;
+
+  text-decoration: none;
+
+  font-size: 11px;
+}
+
+
+/* =========================
+TIMELINE
+========================= */
+
+.timeline {
+  position: relative;
+
+  max-width: 900px;
+}
+
+.timeline::before {
+  content: "";
+
+  position: absolute;
+
+  left: 6px;
+  top: 0;
+  bottom: 0;
+
+  width: 1px;
+
+  background: rgba(255,255,255,.15);
+}
+
+.timeline-item {
+  position: relative;
+
+  padding-left: 45px;
+
+  margin-bottom: 55px;
+}
+
+.timeline-dot {
+  position: absolute;
+
+  left: 1px;
+  top: 5px;
+
+  width: 11px;
+  height: 11px;
+
+  border: 1px solid white;
+
+  border-radius: 50%;
+
+  background: #03040a;
+}
+
+.timeline-item > span {
+  font-family: "Orbitron";
+
+  font-size: 10px;
+
+  opacity: .4;
+}
+
+.timeline-item h3 {
+  margin: 10px 0;
+
+  font-size: 23px;
+}
+
+.timeline-item p {
+  opacity: .55;
+
+  line-height: 1.7;
+}
+
+
+/* =========================
+CONTACT
+========================= */
+
+.contact-box {
+  padding: 80px 30px;
+
+  text-align: center;
+}
+
+.contact-box h2 {
+  font-family: "Orbitron";
+
+  font-size: clamp(35px, 7vw, 80px);
+}
+
+.contact-box p {
+  max-width: 600px;
+
+  margin: 20px auto 35px;
+
+  opacity: .55;
+}
+
+.socials {
+  display: flex;
+
+  justify-content: center;
+
+  gap: 20px;
+
+  flex-wrap: wrap;
+}
+
+.socials a {
+  color: white;
+
+  text-decoration: none;
+
+  font-size: 12px;
+
+  border-bottom:
+    1px solid rgba(255,255,255,.3);
+
+  padding-bottom: 5px;
+}
+
+
+/* =========================
+FOOTER
+========================= */
+
+footer {
+  padding: 30px;
+
+  text-align: center;
+
+  opacity: .3;
+
+  font-size: 10px;
+
+  letter-spacing: 2px;
+}
+
+
+/* =========================
+REVEAL
+========================= */
+
+.reveal {
+  opacity: 0;
+
+  transform: translateY(50px);
+
+  transition:
+    opacity .9s ease,
+    transform .9s ease;
+}
+
+.reveal.active {
+  opacity: 1;
+
+  transform: translateY(0);
+}
+
+
+/* =========================
+MOBILE
+========================= */
+
+@media(max-width:850px) {
+
+  .nav-links {
+    display: none;
+  }
+
+  .menu-btn {
+    display: block;
+  }
+
+  .about-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .skills {
+    grid-template-columns:
+      repeat(2,1fr);
+  }
+
+  .projects {
+    grid-template-columns: 1fr;
+  }
+
+}
+
+
+@media(max-width:520px) {
+
+  section {
+    padding: 90px 6%;
+  }
+
+  .skills {
+    grid-template-columns: 1fr;
+  }
+
+  .hero h1 {
+    font-size: 55px;
+  }
+
+  .about-text,
+  .about-card,
+  .project {
+    padding: 25px;
+  }
+
+  }
